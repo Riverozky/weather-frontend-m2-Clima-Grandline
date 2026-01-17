@@ -1,0 +1,23 @@
+.weather-app {
+    font-family: $font-main;
+    background-color: $secondary-color;
+    min-height: 100vh;
+
+    &__header {
+        margin-bottom: 2rem;
+    }
+
+    &__content {
+        min-height: 60vh;
+    }
+
+    &__footer {
+        background-color: #212529;
+        color: white;
+    }
+
+    &__title {
+        color: $primary-color;
+        font-weight: bold;
+    }
+}

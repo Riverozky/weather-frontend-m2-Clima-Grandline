@@ -11,16 +11,12 @@ const ciudades = [
     { nombre: "Laugh Tale", temp: 25, estado: "Despejado", img: "assets/img/laughtale.png", viento: 10, humedad: 55 },
 ];
 
-// Esperar a que cargue el documento (equivalente a $(document).ready)
 document.addEventListener("DOMContentLoaded", function() {
 
-    // --- LÓGICA PARA INDEX.HTML ---
     const contenedor = document.getElementById("contenedor-tarjetas");
 
     if (contenedor) {
-        // Estamos en el Index, vamos a generar las 10 tarjetas automáticamente
         ciudades.forEach((ciudad, index) => {
-            // Creamos el HTML de la tarjeta
             const tarjetaHTML = `
                 <div class="col-12 col-md-6 col-lg-3 mb-4">
                     <div class="card h-100 shadow-sm">
@@ -34,35 +30,27 @@ document.addEventListener("DOMContentLoaded", function() {
                     </div>
                 </div>
             `;
-            // Agregamos al HTML
             contenedor.innerHTML += tarjetaHTML;
         });
 
-        // Agregamos el evento click a los botones (Delegación de eventos o loop)
         const botones = document.querySelectorAll(".btn-detalle");
         botones.forEach(btn => {
             btn.addEventListener("click", function() {
-                // Obtenemos el índice de la ciudad
                 const index = this.getAttribute("data-index");
-                // Guardamos en LocalStorage (Memoria del navegador)
                 localStorage.setItem("ciudadSeleccionada", JSON.stringify(ciudades[index]));
-                // Navegamos a detalle
                 window.location.href = "detalle.html";
             });
         });
     }
 
-    // --- LÓGICA PARA DETALLE.HTML ---
     const tituloCiudad = document.getElementById("nombre-ciudad");
     
     if (tituloCiudad) {
-        // Estamos en detalle.html, recuperamos los datos
         const ciudadGuardada = localStorage.getItem("ciudadSeleccionada");
         
         if (ciudadGuardada) {
             const datos = JSON.parse(ciudadGuardada);
-            
-            // Rellenamos el HTML con los datos
+
             document.getElementById("nombre-ciudad").innerText = datos.nombre;
             document.getElementById("temp-actual").innerText = datos.temp + "°C";
             document.getElementById("estado-clima").innerText = datos.estado;
@@ -70,7 +58,6 @@ document.addEventListener("DOMContentLoaded", function() {
             document.getElementById("humedad").innerText = datos.humedad;
             document.getElementById("img-detalle").src = datos.img;
         } else {
-            // Si no hay datos (entró directo al link), devolver al inicio
             window.location.href = "index.html";
         }
     }

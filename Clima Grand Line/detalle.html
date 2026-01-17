@@ -4,74 +4,46 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Detalle del Clima</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="assets/CSS/styles.css">
-</head>
-<body>
 
-    <nav class="navbar navbar-dark bg-primary mb-4">
-        <div class="container-fluid">
-            <a class="navbar-brand" href="index.html">⬅ Volver a home</a>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="assets/css/main.css">
+</head>
+<body class="weather-app">
+
+    <nav class="navbar navbar-dark bg-primary weather-app__header">
+        <div class="container">
+            <a class="navbar-brand" href="index.html">⬅ Volver</a>
         </div>
     </nav>
 
-    <main class="container">
-        <div class="card mb-3 shadow">
+    <main class="weather-app__content container my-5">
+
+        <section class="weather-detail card shadow">
             <div class="row g-0">
-                <div class="col-md-4 text-center bg-light d-flex align-items-center justify-content-center">
-                    <img id="img-detalle" src="" class="img-fluid rounded-start" alt="Isla" style="max-height: 200px;">
+                <div class="col-md-4 weather-detail__image">
+                    <img id="img-detalle" class="img-fluid" alt="Isla">
                 </div>
                 <div class="col-md-8">
-                    <div class="card-body">
-                        <h2 class="card-title text-primary" id="nombre-ciudad">Cargando...</h2>
-                        <h3 class="display-3" id="temp-actual">--°C</h3>
-                        <p class="card-text"><small class="text-body-secondary" id="estado-clima">--</small></p>
-                        <div class="d-flex gap-3">
-                            <span class="badge bg-info text-dark">Viento: <span id="viento">--</span> km/h</span>
-                            <span class="badge bg-warning text-dark">Humedad: <span id="humedad">--</span>%</span>
+                    <div class="card-body weather-detail__info">
+                        <h2 id="nombre-ciudad"></h2>
+                        <h3 id="temp-actual"></h3>
+                        <p id="estado-clima"></p>
+
+                        <div class="weather-detail__extra">
+                            <span class="badge bg-info">Viento: <span id="viento"></span> km/h</span>
+                            <span class="badge bg-warning text-dark">Humedad: <span id="humedad"></span>%</span>
                         </div>
                     </div>
                 </div>
             </div>
-        </div>
+        </section>
 
-        <h3 class="mt-5 text-primary">Pronóstico de la semana</h3>
-        <div class="row row-cols-1 row-cols-md-3 g-4 mt-2">
-            <div class="col">
-                <div class="card text-center border-primary">
-                    <div class="card-header">Mañana</div>
-                    <div class="card-body">
-                        <h5>☀ Soleado</h5>
-                        <p>Max: 30°C / Min: 22°C</p>
-                    </div>
-                </div>
-            </div>
-            <div class="col">
-                <div class="card text-center border-primary">
-                    <div class="card-header">Pasado mañana</div>
-                    <div class="card-body">
-                        <h5>☁ Nublado</h5>
-                        <p>Max: 28°C / Min: 20°C</p>
-                    </div>
-                </div>
-            </div>
-            <div class="col">
-                <div class="card text-center border-primary">
-                    <div class="card-header">Viernes</div>
-                    <div class="card-body">
-                        <h5>🌧 Lluvia</h5>
-                        <p>Max: 25°C / Min: 18°C</p>
-                    </div>
-                </div>
-            </div>
-        </div>
     </main>
 
-    <footer class="bg-dark text-white text-center py-3 mt-5">
-        <p>Datos provistos por Den Den Mushi Weather Co.</p>
+    <footer class="weather-app__footer text-center py-3">
+        <p>Datos simulados – One Piece Weather</p>
     </footer>
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="assets/JS/script.js"></script>
+    <script src="assets/js/script.js"></script>
 </body>
 </html>

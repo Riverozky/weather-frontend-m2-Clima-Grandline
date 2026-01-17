@@ -1,0 +1,17 @@
+.place-card {
+    border-radius: $border-radius;
+    transition: transform 0.3s ease;
+
+    &:hover {
+        transform: translateY(-8px);
+    }
+
+    &__name {
+        font-weight: bold;
+        color: $primary-color;
+    }
+
+    &__temp {
+        font-size: 2rem;
+    }
+}
