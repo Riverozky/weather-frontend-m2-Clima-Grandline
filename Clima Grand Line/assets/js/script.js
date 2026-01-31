@@ -1,64 +1,197 @@
-const ciudades = [
-    { nombre: "Loguetown", temp: 24, estado: "Lluvioso", img: "assets/img/loguetown.png", viento: 15, humedad: 80 },
-    { nombre: "Alabasta", temp: 45, estado: "Soleado", img: "assets/img/alabasta.png", viento: 10, humedad: 10 },
-    { nombre: "Water 7", temp: 22, estado: "Nublado", img: "assets/img/water7.png", viento: 30, humedad: 90 },
-    { nombre: "Skypiea", temp: 15, estado: "Ventoso", img: "assets/img/skypeia.png", viento: 50, humedad: 60 },
-    { nombre: "Wano", temp: 18, estado: "Nieve", img: "assets/img/wano.png", viento: 20, humedad: 50 },
-    { nombre: "Dressrosa", temp: 30, estado: "Soleado", img: "assets/img/dressrosa.png", viento: 12, humedad: 40 },
-    { nombre: "Whole Cake", temp: 28, estado: "Dulce", img: "assets/img/whole cake.png", viento: 5, humedad: 70 },
-    { nombre: "Zou", temp: 26, estado: "Húmedo", img: "assets/img/zou.png", viento: 25, humedad: 85 },
-    { nombre: "Marineford", temp: 20, estado: "Tormenta", img: "assets/img/marineford.png", viento: 60, humedad: 75 },
-    { nombre: "Laugh Tale", temp: 25, estado: "Despejado", img: "assets/img/laughtale.png", viento: 10, humedad: 55 },
+const lugares = [
+    {
+        id: 1,
+        nombre: "Loguetown",
+        tempActual: 24,
+        estadoActual: "Lluvioso",
+        img: "assets/img/loguetown.png",
+        viento: 15,
+        humedad: 80,
+        pronosticoSemanal: [
+            { dia: "Lunes", min: 20, max: 25, estado: "Lluvioso" },
+            { dia: "Martes", min: 19, max: 24, estado: "Nublado" },
+            { dia: "Miércoles", min: 21, max: 26, estado: "Lluvioso" },
+            { dia: "Jueves", min: 22, max: 27, estado: "Soleado" },
+            { dia: "Viernes", min: 20, max: 24, estado: "Lluvioso" }
+        ]
+    },
+    {
+        id: 2,
+        nombre: "Alabasta",
+        tempActual: 45,
+        estadoActual: "Soleado",
+        img: "assets/img/alabasta.png",
+        viento: 10,
+        humedad: 10,
+        pronosticoSemanal: [
+            { dia: "Lunes", min: 38, max: 45, estado: "Soleado" },
+            { dia: "Martes", min: 40, max: 46, estado: "Soleado" },
+            { dia: "Miércoles", min: 39, max: 44, estado: "Soleado" },
+            { dia: "Jueves", min: 37, max: 43, estado: "Soleado" },
+            { dia: "Viernes", min: 36, max: 42, estado: "Soleado" }
+        ]
+    },
+    {
+        id: 3,
+        nombre: "Water 7",
+        tempActual: 22,
+        estadoActual: "Nublado",
+        img: "assets/img/water7.png",
+        viento: 30,
+        humedad: 90,
+        pronosticoSemanal: [
+            { dia: "Lunes", min: 18, max: 22, estado: "Lluvioso" },
+            { dia: "Martes", min: 19, max: 23, estado: "Nublado" },
+            { dia: "Miércoles", min: 20, max: 24, estado: "Nublado" },
+            { dia: "Jueves", min: 21, max: 25, estado: "Lluvioso" },
+            { dia: "Viernes", min: 19, max: 23, estado: "Nublado" }
+        ]
+    },
+    {
+        id: 4,
+        nombre: "Skypiea",
+        tempActual: 15,
+        estadoActual: "Ventoso",
+        img: "assets/img/skypeia.png",
+        viento: 50,
+        humedad: 60,
+        pronosticoSemanal: [
+            { dia: "Lunes", min: 12, max: 16, estado: "Ventoso" },
+            { dia: "Martes", min: 13, max: 17, estado: "Ventoso" },
+            { dia: "Miércoles", min: 14, max: 18, estado: "Soleado" },
+            { dia: "Jueves", min: 13, max: 17, estado: "Ventoso" },
+            { dia: "Viernes", min: 12, max: 16, estado: "Nublado" }
+        ]
+    },
+    {
+        id: 5,
+        nombre: "Wano",
+        tempActual: 18,
+        estadoActual: "Nieve",
+        img: "assets/img/wano.png",
+        viento: 20,
+        humedad: 50,
+        pronosticoSemanal: [
+            { dia: "Lunes", min: 5, max: 10, estado: "Nieve" },
+            { dia: "Martes", min: 6, max: 11, estado: "Nieve" },
+            { dia: "Miércoles", min: 7, max: 12, estado: "Nublado" },
+            { dia: "Jueves", min: 6, max: 11, estado: "Nieve" },
+            { dia: "Viernes", min: 5, max: 10, estado: "Nieve" }
+        ]
+    }
 ];
 
-document.addEventListener("DOMContentLoaded", function() {
+function obtenerLugarPorNombre(nombre) {
+    return lugares.find(lugar => lugar.nombre === nombre);
+}
+
+function calcularEstadisticas(pronostico) {
+    let minTemp = Infinity;
+    let maxTemp = -Infinity;
+    let suma = 0;
+    let conteoEstados = { "Soleado": 0, "Lluvioso": 0, "Nieve": 0 };
+
+    for (let dia of pronostico) {
+        if (dia.min < minTemp) minTemp = dia.min;
+        if (dia.max > maxTemp) maxTemp = dia.max;
+
+        suma += (dia.min + dia.max) / 2;
+
+        let estado = dia.estado.toLowerCase();
+        if(estado.includes("sol")) conteoEstados["Soleado"]++;
+        else if(estado.includes("lluv")) conteoEstados["Lluvioso"]++;
+        else if(estado.includes("nieve")) conteoEstados["Nieve"]++;
+    }
+
+    const promedio = (suma / pronostico.length).toFixed(1);
+
+    let resumen = "Semana con clima variable.";
+    if (conteoEstados["Soleado"] > 2) {
+        resumen = "Semana mayormente soleada ☀️.";
+    } else if (conteoEstados["Lluvioso"] >= 2) {
+        resumen = "Semana inestable con lluvias 🌧️.";
+    } else if (conteoEstados["Nieve"] >= 2) {
+        resumen = "Semana muy fría con nieve ❄️.";
+    }
+
+    return { minTemp, maxTemp, promedio, conteoEstados, resumen };
+}
+
+document.addEventListener("DOMContentLoaded", () => {
 
     const contenedor = document.getElementById("contenedor-tarjetas");
 
     if (contenedor) {
-        ciudades.forEach((ciudad, index) => {
-            const tarjetaHTML = `
+        lugares.forEach(lugar => {
+            contenedor.innerHTML += `
                 <div class="col-12 col-md-6 col-lg-3 mb-4">
-                    <div class="card h-100 shadow-sm">
-                        <img src="${ciudad.img}" class="card-img-top" alt="${ciudad.nombre}" style="height: 150px; object-fit: cover;">
-                        <div class="card-body">
-                            <h5 class="card-title text-danger fw-bold">${ciudad.nombre}</h5>
-                            <p class="card-text display-6">${ciudad.temp}°C</p>
-                            <p class="card-text text-muted">${ciudad.estado}</p>
-                            <button class="btn btn-primary w-100 btn-detalle" data-index="${index}">Ver Detalle</button>
+                    <div class="place-card card h-100 shadow-sm border-0">
+                        <img src="${lugar.img}" class="card-img-top" style="height:150px; object-fit:cover">
+                        <div class="card-body text-center">
+                            <h5 class="place-card__name card-title fw-bold">${lugar.nombre}</h5>
+                            <p class="place-card__temp my-2 display-6">${lugar.tempActual}°C</p>
+                            <p class="text-muted mb-3">${lugar.estadoActual}</p>
+                            <button class="btn btn-primary w-100 rounded-pill btn-detalle" data-nombre="${lugar.nombre}">
+                                Ver Detalle
+                            </button>
                         </div>
                     </div>
                 </div>
             `;
-            contenedor.innerHTML += tarjetaHTML;
         });
 
-        const botones = document.querySelectorAll(".btn-detalle");
-        botones.forEach(btn => {
-            btn.addEventListener("click", function() {
-                const index = this.getAttribute("data-index");
-                localStorage.setItem("ciudadSeleccionada", JSON.stringify(ciudades[index]));
+        document.querySelectorAll(".btn-detalle").forEach(btn => {
+            btn.addEventListener("click", () => {
+                localStorage.setItem("lugarSeleccionado", btn.dataset.nombre);
                 window.location.href = "detalle.html";
             });
         });
     }
 
-    const tituloCiudad = document.getElementById("nombre-ciudad");
-    
-    if (tituloCiudad) {
-        const ciudadGuardada = localStorage.getItem("ciudadSeleccionada");
-        
-        if (ciudadGuardada) {
-            const datos = JSON.parse(ciudadGuardada);
+    if (document.getElementById("nombre-ciudad")) {
+        const nombreGuardado = localStorage.getItem("lugarSeleccionado");
+        const lugar = obtenerLugarPorNombre(nombreGuardado);
 
-            document.getElementById("nombre-ciudad").innerText = datos.nombre;
-            document.getElementById("temp-actual").innerText = datos.temp + "°C";
-            document.getElementById("estado-clima").innerText = datos.estado;
-            document.getElementById("viento").innerText = datos.viento;
-            document.getElementById("humedad").innerText = datos.humedad;
-            document.getElementById("img-detalle").src = datos.img;
-        } else {
+        if (!lugar) {
             window.location.href = "index.html";
+            return;
         }
+
+        document.getElementById("nombre-ciudad").innerText = lugar.nombre;
+        document.getElementById("temp-actual").innerText = lugar.tempActual + "°C";
+        document.getElementById("estado-clima").innerText = lugar.estadoActual;
+        document.getElementById("viento").innerText = lugar.viento;
+        document.getElementById("humedad").innerText = lugar.humedad;
+        document.getElementById("img-detalle").src = lugar.img;
+
+        const tablaBody = document.getElementById("pronostico-dias"); 
+        if (tablaBody) {
+            tablaBody.innerHTML = lugar.pronosticoSemanal
+                .map(d => `
+                    <tr>
+                        <td class="fw-bold">${d.dia}</td>
+                        <td class="text-primary">${d.min}°C</td>
+                        <td class="text-danger">${d.max}°C</td>
+                        <td>${d.estado}</td>
+                    </tr>
+                `)
+                .join("");
+        }
+
+        const stats = calcularEstadisticas(lugar.pronosticoSemanal);
+
+        const statProm = document.getElementById("stat-promedio");
+        const statMin = document.getElementById("stat-min");
+        const statMax = document.getElementById("stat-max");
+        const statResumen = document.getElementById("resumen-texto");
+        const statSol = document.getElementById("dias-soleados");
+        const statLluvia = document.getElementById("dias-lluviosos");
+
+        if (statProm) statProm.innerText = stats.promedio + "°C";
+        if (statMin) statMin.innerText = stats.minTemp + "°C";
+        if (statMax) statMax.innerText = stats.maxTemp + "°C";
+        if (statResumen) statResumen.innerText = stats.resumen;
+        if (statSol) statSol.innerText = stats.conteoEstados["Soleado"] || 0;
+        if (statLluvia) statLluvia.innerText = stats.conteoEstados["Lluvioso"] || 0;
     }
 });
