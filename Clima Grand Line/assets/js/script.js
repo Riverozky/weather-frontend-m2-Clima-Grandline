@@ -1,197 +1,198 @@
-const lugares = [
-    {
-        id: 1,
-        nombre: "Loguetown",
-        tempActual: 24,
-        estadoActual: "Lluvioso",
-        img: "assets/img/loguetown.png",
-        viento: 15,
-        humedad: 80,
-        pronosticoSemanal: [
-            { dia: "Lunes", min: 20, max: 25, estado: "Lluvioso" },
-            { dia: "Martes", min: 19, max: 24, estado: "Nublado" },
-            { dia: "Miércoles", min: 21, max: 26, estado: "Lluvioso" },
-            { dia: "Jueves", min: 22, max: 27, estado: "Soleado" },
-            { dia: "Viernes", min: 20, max: 24, estado: "Lluvioso" }
-        ]
-    },
-    {
-        id: 2,
-        nombre: "Alabasta",
-        tempActual: 45,
-        estadoActual: "Soleado",
-        img: "assets/img/alabasta.png",
-        viento: 10,
-        humedad: 10,
-        pronosticoSemanal: [
-            { dia: "Lunes", min: 38, max: 45, estado: "Soleado" },
-            { dia: "Martes", min: 40, max: 46, estado: "Soleado" },
-            { dia: "Miércoles", min: 39, max: 44, estado: "Soleado" },
-            { dia: "Jueves", min: 37, max: 43, estado: "Soleado" },
-            { dia: "Viernes", min: 36, max: 42, estado: "Soleado" }
-        ]
-    },
-    {
-        id: 3,
-        nombre: "Water 7",
-        tempActual: 22,
-        estadoActual: "Nublado",
-        img: "assets/img/water7.png",
-        viento: 30,
-        humedad: 90,
-        pronosticoSemanal: [
-            { dia: "Lunes", min: 18, max: 22, estado: "Lluvioso" },
-            { dia: "Martes", min: 19, max: 23, estado: "Nublado" },
-            { dia: "Miércoles", min: 20, max: 24, estado: "Nublado" },
-            { dia: "Jueves", min: 21, max: 25, estado: "Lluvioso" },
-            { dia: "Viernes", min: 19, max: 23, estado: "Nublado" }
-        ]
-    },
-    {
-        id: 4,
-        nombre: "Skypiea",
-        tempActual: 15,
-        estadoActual: "Ventoso",
-        img: "assets/img/skypeia.png",
-        viento: 50,
-        humedad: 60,
-        pronosticoSemanal: [
-            { dia: "Lunes", min: 12, max: 16, estado: "Ventoso" },
-            { dia: "Martes", min: 13, max: 17, estado: "Ventoso" },
-            { dia: "Miércoles", min: 14, max: 18, estado: "Soleado" },
-            { dia: "Jueves", min: 13, max: 17, estado: "Ventoso" },
-            { dia: "Viernes", min: 12, max: 16, estado: "Nublado" }
-        ]
-    },
-    {
-        id: 5,
-        nombre: "Wano",
-        tempActual: 18,
-        estadoActual: "Nieve",
-        img: "assets/img/wano.png",
-        viento: 20,
-        humedad: 50,
-        pronosticoSemanal: [
-            { dia: "Lunes", min: 5, max: 10, estado: "Nieve" },
-            { dia: "Martes", min: 6, max: 11, estado: "Nieve" },
-            { dia: "Miércoles", min: 7, max: 12, estado: "Nublado" },
-            { dia: "Jueves", min: 6, max: 11, estado: "Nieve" },
-            { dia: "Viernes", min: 5, max: 10, estado: "Nieve" }
-        ]
+class WeatherAPI {
+    constructor() {
+        this.apiKey = "657195df834cd83af020a62e080e1443"; 
+        this.baseUrl = "https://api.openweathermap.org/data/2.5/forecast";
     }
-];
 
-function obtenerLugarPorNombre(nombre) {
-    return lugares.find(lugar => lugar.nombre === nombre);
+    /**
+     * Obtiene datos meteorológicos reales de una ciudad.
+     * @param {string} ciudadReal 
+     */
+    async obtenerDatosClima(ciudadReal) {
+        try {
+            const url = `${this.baseUrl}?q=${ciudadReal}&appid=${this.apiKey}&units=metric&lang=es`;
+            const respuesta = await fetch(url);
+            
+            if (!respuesta.ok) {
+                throw new Error(`Error en el Log Pose: ${respuesta.statusText}`);
+            }
+            
+            return await respuesta.json();
+        } catch (error) {
+            console.error("Fallo en la conexión con la API:", error);
+            return null;
+        }
+    }
 }
 
-function calcularEstadisticas(pronostico) {
-    let minTemp = Infinity;
-    let maxTemp = -Infinity;
-    let suma = 0;
-    let conteoEstados = { "Soleado": 0, "Lluvioso": 0, "Nieve": 0 };
-
-    for (let dia of pronostico) {
-        if (dia.min < minTemp) minTemp = dia.min;
-        if (dia.max > maxTemp) maxTemp = dia.max;
-
-        suma += (dia.min + dia.max) / 2;
-
-        let estado = dia.estado.toLowerCase();
-        if(estado.includes("sol")) conteoEstados["Soleado"]++;
-        else if(estado.includes("lluv")) conteoEstados["Lluvioso"]++;
-        else if(estado.includes("nieve")) conteoEstados["Nieve"]++;
+class WeatherApp {
+    constructor(apiClient) {
+        this.apiClient = apiClient;
+        this.islasConfig = [
+            { nombre: "Loguetown", ciudadReal: "London", img: "assets/img/loguetown.png" },
+            { nombre: "Alabasta", ciudadReal: "Cairo", img: "assets/img/alabasta.png" },
+            { nombre: "Water 7", ciudadReal: "Venice", img: "assets/img/water7.png" },
+            { nombre: "Skypiea", ciudadReal: "La Paz", img: "assets/img/skypeia.png" },
+            { nombre: "Wano", ciudadReal: "Kyoto", img: "assets/img/wano.png" }
+        ];
+        this.datosProcesados = [];
     }
 
-    const promedio = (suma / pronostico.length).toFixed(1);
-
-    let resumen = "Semana con clima variable.";
-    if (conteoEstados["Soleado"] > 2) {
-        resumen = "Semana mayormente soleada ☀️.";
-    } else if (conteoEstados["Lluvioso"] >= 2) {
-        resumen = "Semana inestable con lluvias 🌧️.";
-    } else if (conteoEstados["Nieve"] >= 2) {
-        resumen = "Semana muy fría con nieve ❄️.";
-    }
-
-    return { minTemp, maxTemp, promedio, conteoEstados, resumen };
-}
-
-document.addEventListener("DOMContentLoaded", () => {
-
-    const contenedor = document.getElementById("contenedor-tarjetas");
-
-    if (contenedor) {
-        lugares.forEach(lugar => {
-            contenedor.innerHTML += `
-                <div class="col-12 col-md-6 col-lg-3 mb-4">
-                    <div class="place-card card h-100 shadow-sm border-0">
-                        <img src="${lugar.img}" class="card-img-top" style="height:150px; object-fit:cover">
-                        <div class="card-body text-center">
-                            <h5 class="place-card__name card-title fw-bold">${lugar.nombre}</h5>
-                            <p class="place-card__temp my-2 display-6">${lugar.tempActual}°C</p>
-                            <p class="text-muted mb-3">${lugar.estadoActual}</p>
-                            <button class="btn btn-primary w-100 rounded-pill btn-detalle" data-nombre="${lugar.nombre}">
-                                Ver Detalle
-                            </button>
-                        </div>
-                    </div>
-                </div>
-            `;
+    // carga de datos de todas las islas
+    async cargarTodo() {
+        const promesas = this.islasConfig.map(async (isla) => {
+            const rawData = await this.apiClient.obtenerDatosClima(isla.ciudadReal);
+            if (rawData) return this.mapearDatos(isla, rawData);
         });
 
+        this.datosProcesados = (await Promise.all(promesas)).filter(d => d !== undefined);
+        
+        localStorage.setItem("datosClima", JSON.stringify(this.datosProcesados));
+
+        this.gestionarPantallaActual();
+    }
+
+    // Transformacion de api a la  app
+    mapearDatos(isla, data) {
+        const pronostico = data.list.filter((_, i) => i % 8 === 0).map(item => ({
+            dia: new Date(item.dt_txt).toLocaleDateString('es-ES', { weekday: 'long' }),
+            min: Math.round(item.main.temp_min),
+            max: Math.round(item.main.temp_max),
+            estado: item.weather[0].main 
+        }));
+
+        return {
+            ...isla,
+            tempActual: Math.round(data.list[0].main.temp),
+            estadoActual: data.list[0].weather[0].description,
+            viento: data.list[0].wind.speed,
+            humedad: data.list[0].main.humidity,
+            pronosticoSemanal: pronostico
+        };
+    }
+
+    gestionarPantallaActual() {
+        const loading = document.getElementById("estado-carga");
+        if (loading) loading.style.display = "none";
+
+        if (document.getElementById("contenedor-tarjetas")) {
+            this.renderHome();
+        } else if (document.getElementById("nombre-ciudad")) {
+            this.renderDetalle();
+        }
+    }
+
+    // tarjetas de inicio
+    renderHome() {
+        const contenedor = document.getElementById("contenedor-tarjetas");
+        if (!contenedor) return;
+
+        contenedor.innerHTML = this.datosProcesados.map(isla => `
+            <div class="col-12 col-md-6 col-lg-4 mb-4">
+                <div class="place-card card h-100 shadow-sm border-0">
+                    <img src="${isla.img}" class="card-img-top" style="height:180px; object-fit:cover" alt="${isla.nombre}">
+                    <div class="card-body text-center">
+                        <h5 class="fw-bold text-primary">${isla.nombre}</h5>
+                        <p class="display-6 my-2">${isla.tempActual}°C</p>
+                        <p class="text-muted text-capitalize">${isla.estadoActual}</p>
+                        <button class="btn btn-primary w-100 rounded-pill btn-detalle" data-isla="${isla.nombre}">
+                            Ver Detalle
+                        </button>
+                    </div>
+                </div>
+            </div>
+        `).join("");
+
+        // Eventos de navegación
         document.querySelectorAll(".btn-detalle").forEach(btn => {
             btn.addEventListener("click", () => {
-                localStorage.setItem("lugarSeleccionado", btn.dataset.nombre);
+                localStorage.setItem("islaSeleccionada", btn.dataset.isla);
                 window.location.href = "detalle.html";
             });
         });
     }
 
-    if (document.getElementById("nombre-ciudad")) {
-        const nombreGuardado = localStorage.getItem("lugarSeleccionado");
-        const lugar = obtenerLugarPorNombre(nombreGuardado);
+    //Carga de info en el detalle 
+    renderDetalle() {
+        const nombre = localStorage.getItem("islaSeleccionada");
+        const datos = JSON.parse(localStorage.getItem("datosClima"));
+        if (!datos) return window.location.href = "index.html";
 
-        if (!lugar) {
-            window.location.href = "index.html";
-            return;
+        const isla = datos.find(i => i.nombre === nombre);
+        if (!isla) return window.location.href = "index.html";
+
+        //DOM
+        document.getElementById("nombre-ciudad").innerText = isla.nombre;
+        document.getElementById("temp-actual").innerText = `${isla.tempActual}°C`;
+        document.getElementById("estado-clima").innerText = isla.estadoActual;
+        document.getElementById("viento").innerText = isla.viento;
+        document.getElementById("humedad").innerText = isla.humedad;
+        document.getElementById("img-detalle").src = isla.img;
+
+        const tabla = document.getElementById("pronostico-dias");
+        if (tabla) {
+            tabla.innerHTML = isla.pronosticoSemanal.map(d => `
+                <tr>
+                    <td class="text-capitalize fw-bold">${d.dia}</td>
+                    <td class="text-primary">${d.min}°C</td>
+                    <td class="text-danger">${d.max}°C</td>
+                    <td>${this.traducirEstado(d.estado)}</td>
+                </tr>
+            `).join("");
         }
 
-        document.getElementById("nombre-ciudad").innerText = lugar.nombre;
-        document.getElementById("temp-actual").innerText = lugar.tempActual + "°C";
-        document.getElementById("estado-clima").innerText = lugar.estadoActual;
-        document.getElementById("viento").innerText = lugar.viento;
-        document.getElementById("humedad").innerText = lugar.humedad;
-        document.getElementById("img-detalle").src = lugar.img;
-
-        const tablaBody = document.getElementById("pronostico-dias"); 
-        if (tablaBody) {
-            tablaBody.innerHTML = lugar.pronosticoSemanal
-                .map(d => `
-                    <tr>
-                        <td class="fw-bold">${d.dia}</td>
-                        <td class="text-primary">${d.min}°C</td>
-                        <td class="text-danger">${d.max}°C</td>
-                        <td>${d.estado}</td>
-                    </tr>
-                `)
-                .join("");
-        }
-
-        const stats = calcularEstadisticas(lugar.pronosticoSemanal);
-
-        const statProm = document.getElementById("stat-promedio");
-        const statMin = document.getElementById("stat-min");
-        const statMax = document.getElementById("stat-max");
-        const statResumen = document.getElementById("resumen-texto");
-        const statSol = document.getElementById("dias-soleados");
-        const statLluvia = document.getElementById("dias-lluviosos");
-
-        if (statProm) statProm.innerText = stats.promedio + "°C";
-        if (statMin) statMin.innerText = stats.minTemp + "°C";
-        if (statMax) statMax.innerText = stats.maxTemp + "°C";
-        if (statResumen) statResumen.innerText = stats.resumen;
-        if (statSol) statSol.innerText = stats.conteoEstados["Soleado"] || 0;
-        if (statLluvia) statLluvia.innerText = stats.conteoEstados["Lluvioso"] || 0;
+        this.renderStatsYAlertas(isla.pronosticoSemanal);
     }
+
+    //Estadisticas y reportes de clima
+
+    renderStatsYAlertas(pronostico) {
+        const temps = pronostico.map(d => (d.min + d.max) / 2);
+        const min = Math.min(...pronostico.map(d => d.min));
+        const max = Math.max(...pronostico.map(d => d.max));
+        const prom = (temps.reduce((a, b) => a + b, 0) / temps.length).toFixed(1);
+
+        document.getElementById("stat-promedio").innerText = `${prom}°C`;
+        document.getElementById("stat-min").innerText = `${min}°C`;
+        document.getElementById("stat-max").innerText = `${max}°C`;
+
+        const resumenTexto = document.getElementById("resumen-texto");
+        let mensajeResumen = "Ruta estable por la Grand Line.";
+        
+        const tieneLluvia = pronostico.some(d => d.estado === 'Rain');
+        const esMuyCalido = prom > 28;
+
+        if (esMuyCalido) mensajeResumen = "El calor de la zona podría agotar las provisiones. ¡Atención navegantes! ☀️";
+        else if (tieneLluvia) mensajeResumen = "Se esperan chubascos intermitentes que podrían dificultar la visibilidad 🌧️.";
+        
+        if (resumenTexto) resumenTexto.innerText = mensajeResumen;
+
+        const alertaBox = document.getElementById("alerta-clima");
+        if (!alertaBox) return;
+
+        alertaBox.className = "p-2 rounded small fw-bold"; // Reset clases
+
+        if (prom > 30) {
+            alertaBox.innerText = "🔥 Alerta de Calor: Riesgo de evaporación de reservas.";
+            alertaBox.classList.add("bg-danger", "text-white");
+        } else if (tieneLluvia) {
+            alertaBox.innerText = "🌧️ Alerta de Tormenta: Aseguren el timón y las velas.";
+            alertaBox.classList.add("bg-info", "text-dark");
+        } else {
+            alertaBox.innerText = "⚓ Log Pose estable: Condiciones óptimas para navegar.";
+            alertaBox.classList.add("bg-success", "text-white");
+        }
+    }
+
+    traducirEstado(estado) {
+        const iconos = { 'Clear': '☀️ Despejado', 'Clouds': '☁️ Nublado', 'Rain': '🌧️ Lluvia', 'Snow': '❄️ Nieve' };
+        return iconos[estado] || estado;
+    }
+}
+
+const api = new WeatherAPI();
+const app = new WeatherApp(api);
+
+document.addEventListener("DOMContentLoaded", () => {
+    app.cargarTodo();
 });
