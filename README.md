@@ -1,29 +1,63 @@
-🏴‍☠️ Weather Grand Line App
+🏴‍☠️ Weather Grand Line App (Vue.js Edition)
 
-Aplicación meteorológica interactiva que fusiona el universo de One Piece con datos climáticos reales. El proyecto ha evolucionado de datos estáticos a una arquitectura profesional basada en objetos y consumo de APIs.
+Aplicación meteorológica interactiva que fusiona el universo de One Piece con datos climáticos reales, ahora potenciada por Vue 3. Esta versión marca la transición de una web estática a una Single Page Application (SPA) profesional.
 🎯 Resumen del Proyecto
 
-El sistema consulta la API de OpenWeatherMap para obtener el clima de ciudades reales y "mapea" esos datos a islas icónicas del anime. Utiliza JavaScript asíncrono para garantizar que la interfaz no se bloquee mientras se reciben los datos de navegación.
-🛠️ Pilares Técnicos
+El sistema consume la API de Open-Meteo/OpenWeather para obtener datos climáticos de ciudades reales que han sido "mapeadas" a islas icónicas del Grand Line. Gracias a la reactividad de Vue, la navegación es instantánea y la interfaz se actualiza sin recargar la página.
+🖼️ Vistas Principales
 
-    Arquitectura POO: Estructurado en clases (WeatherAPI para datos y WeatherApp para lógica/interfaz) para cumplir con estándares de desarrollo profesional.
+    Home (Inicio): Panel principal que muestra el mapa del Grand Line con un buscador dinámico y tarjetas reactivas de cada isla.
 
-    Consumo de API: Implementación de fetch con async/await y manejo de errores para obtener pronósticos reales.
+    Detalle de Isla: Vista profunda que muestra estadísticas avanzadas (promedios, máximas y mínimas) y el pronóstico extendido para la navegación.
 
-    Lógica de Negocio: Procesamiento automático de promedios, temperaturas extremas y alertas de navegación dinámicas (Módulo 5).
+    Catálogo / Acerca de: (Opcional, según lo que tengas en tu router) Sección informativa sobre los piratas que desarrollaron la app.
 
-    Persistencia: Uso de localStorage para transferir la información de las islas entre la vista principal y el detalle.
+🛣️ Rutas Configuradas (Vue Router)
 
-📂 Organización
+La aplicación utiliza vue-router para gestionar la navegación de forma interna:
 
-    Frontend: HTML5, CSS3 y Bootstrap 5 para un diseño responsivo.
+    /: Ruta raíz que carga el componente HomeView.
 
-    Backend Simulado: Mapeo de ciudades (ej: Venecia → Water 7) para alimentar la temática.
+    /lugar/:nombre: Ruta dinámica que recibe el nombre de la isla como parámetro para mostrar su información específica en DetalleView.
 
-🚀 Instalación
+🛠️ Pilares Técnicos (Módulo 6)
 
-    Clonar el repositorio.
+    Arquitectura Componentizada: Uso de componentes .vue para separar la lógica, el diseño y la estructura.
 
-    Añadir la apiKey en script.js.
+    Navegación SPA: Implementación de rutas dinámicas que eliminan el uso de localStorage para transferir datos entre páginas.
 
-    Abrir index.html con Live Server.
+    Consumo Asíncrono: Servicio centralizado en WeatherAPI.js para la gestión de peticiones con fetch y async/await.
+
+    Estilos: Integración de Bootstrap 5 con diseños personalizados para mantener la estética pirata.
+
+🚀 Instrucciones de Ejecución
+
+Para correr este proyecto en tu entorno local, sigue estos pasos:
+
+    Clonar el repositorio:
+    Bash
+
+    git clone [https://github.com/Riverozky/weather-frontend-m2-Clima-Grandline]
+
+    Entrar a la carpeta del proyecto:
+    Bash
+
+    cd Clima-grand-line
+
+    Instalar las dependencias:
+    Bash
+
+    npm install
+
+    Ejecutar el servidor de desarrollo:
+    Bash
+
+    npm run dev
+
+    Abrir en el navegador:
+    Sigue el enlace que aparecerá en tu terminal (normalmente http://localhost:5173).
+
+🔗 Repositorio Público
+
+Puedes encontrar el código fuente y el historial de versiones en:
+👉 https://github.com/Riverozky/weather-frontend-m2-Clima-Grandline

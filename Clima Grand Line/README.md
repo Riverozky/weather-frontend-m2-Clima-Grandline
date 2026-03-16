@@ -37,7 +37,7 @@ Para correr este proyecto en tu entorno local, sigue estos pasos:
     Clonar el repositorio:
     Bash
 
-    git clone [ENLACE_A_TU_REPOSITORIO]
+    git clone [https://github.com/Riverozky/weather-frontend-m2-Clima-Grandline]
 
     Entrar a la carpeta del proyecto:
     Bash
@@ -60,4 +60,4 @@ Para correr este proyecto en tu entorno local, sigue estos pasos:
 🔗 Repositorio Público
 
 Puedes encontrar el código fuente y el historial de versiones en:
-👉 [Tu Enlace de GitHub Aquí]
+https://github.com/Riverozky/weather-frontend-m2-Clima-Grandline
