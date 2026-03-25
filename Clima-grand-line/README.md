@@ -56,8 +56,3 @@ Para correr este proyecto en tu entorno local, sigue estos pasos:
 
     Abrir en el navegador:
     Sigue el enlace que aparecerá en tu terminal (normalmente http://localhost:5173).
-
-🔗 Repositorio Público
-
-Puedes encontrar el código fuente y el historial de versiones en:
-👉 [Tu Enlace de GitHub Aquí]
