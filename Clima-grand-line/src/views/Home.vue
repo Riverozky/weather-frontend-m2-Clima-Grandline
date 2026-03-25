@@ -9,7 +9,7 @@
       <div class="col-md-6">
         <input 
           type="text" 
-          class="form-control form-control-lg" 
+          class="form-control form-control-lg shadow-sm" 
           placeholder="Buscador de islas..." 
           v-model="busqueda"
         >
@@ -27,12 +27,25 @@
       </div>
 
       <div class="col-12 col-md-6 col-lg-4 mb-4" v-for="isla in islasFiltradas" :key="isla.nombre">
-        <div class="card h-100 shadow-sm border-0">
+        <div class="card h-100 shadow-sm border-0 position-relative">
+          
+          <div 
+            class="position-absolute top-0 end-0 p-3" 
+            style="z-index: 10; cursor: pointer; font-size: 1.5rem;"
+            @click.stop="toggleFav(isla.nombre)"
+          >
+            <span :class="esFavorito(isla.nombre) ? 'text-warning' : 'text-light'" style="text-shadow: 0 0 5px rgba(0,0,0,0.5);">
+              {{ esFavorito(isla.nombre) ? '★' : '☆' }}
+            </span>
+          </div>
+
           <img :src="isla.img" class="card-img-top" style="height:180px; object-fit:cover" :alt="isla.nombre">
+          
           <div class="card-body text-center">
             <h5 class="fw-bold text-primary">{{ isla.nombre }}</h5>
             <p class="display-6 my-2">{{ isla.tempActual }}°C</p>
             <p class="text-muted text-capitalize">{{ isla.estadoActual }}</p>
+            
             <button class="btn btn-primary w-100 rounded-pill" @click="verDetalle(isla.nombre)">
               Ver Detalle
             </button>
@@ -45,6 +58,7 @@
 
 <script>
 import { weatherAPI } from '../services/WeatherAPI';
+import { mapState } from 'vuex';
 
 export default {
   name: 'Home',
@@ -52,12 +66,14 @@ export default {
     return {
       islas: [],
       cargando: true,
-      busqueda: '' // Variable atada al input con v-model
+      busqueda: ''
     };
   },
   computed: {
+    // Traemos el estado del usuario para saber si está logueado y sus favoritos
+    ...mapState(['user', 'isAuthenticated']),
+    
     islasFiltradas() {
-      // Filtra de forma reactiva a medida que el usuario escribe
       return this.islas.filter(isla => 
         isla.nombre.toLowerCase().includes(this.busqueda.toLowerCase())
       );
@@ -69,9 +85,35 @@ export default {
   },
   methods: {
     verDetalle(nombre) {
-      // Navegación con Vue Router
       this.$router.push({ name: 'Detalle', params: { nombre: nombre } });
+    },
+    
+    // Función para agregar o quitar de favoritos
+    toggleFav(nombreIsla) {
+      if (!this.isAuthenticated) {
+        alert("¡Paren las máquinas! Debes iniciar sesión para marcar favoritos.");
+        this.$router.push('/login');
+        return;
+      }
+      // Llamamos a la mutación de Vuex
+      this.$store.commit('TOGGLE_FAVORITE', nombreIsla);
+    },
+
+    // Función para verificar si una isla ya es favorita
+    esFavorito(nombreIsla) {
+      if (!this.isAuthenticated || !this.user.favorites) return false;
+      return this.user.favorites.includes(nombreIsla);
     }
   }
 }
 </script>
+
+<style scoped>
+/* Un pequeño efecto visual para la estrella */
+.text-warning {
+  transition: transform 0.2s;
+}
+.text-warning:hover {
+  transform: scale(1.2);
+}
+</style>

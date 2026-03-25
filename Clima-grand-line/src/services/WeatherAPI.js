@@ -1,4 +1,3 @@
-// src/services/WeatherAPI.js
 class WeatherAPI {
     constructor() {
         this.apiKey = "657195df834cd83af020a62e080e1443"; 
