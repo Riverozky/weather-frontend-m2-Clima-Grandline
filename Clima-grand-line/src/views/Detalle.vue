@@ -39,7 +39,7 @@
       <div class="row">
         <div class="col-lg-7 mb-4">
           <div class="card shadow-sm border-0 h-100">
-            <div class="card-header bg-white fw-bold py-3 text-primary">📅 Pronóstico de la Semana</div>
+            <div class="card-header bg-white fw-bold py-3 text-primary">Pronóstico de la Semana</div>
             <div class="card-body p-0">
               <div class="table-responsive">
                 <table class="table table-hover mb-0 text-center align-middle">

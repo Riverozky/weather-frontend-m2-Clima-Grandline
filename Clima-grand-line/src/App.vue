@@ -1,8 +1,8 @@
 <template>
-  <div class="weather-app d-flex flex-column min-vh-100">
+  <div class="weather-app d-flex flex-column min-vh-100" style="background-color: #eceeef;">
     <nav class="navbar navbar-expand-lg navbar-dark bg-primary sticky-top">
       <div class="container">
-        <router-link class="navbar-brand fw-bold" to="/">Clima Grand Line 🏴‍☠️</router-link>
+        <router-link class="navbar-brand fw-bold" to="/">Log Pose Weather</router-link>
         
         <div class="ms-auto d-flex align-items-center">
           <template v-if="isAuthenticated">
